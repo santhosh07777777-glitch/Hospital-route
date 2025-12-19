@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hospital Route Finder</title>
+  <meta charset="utf-8" />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet Routing -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+  />
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+  <style>
+    #map {
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+  // Initialize map
+  var map = L.map("map").setView([13.0827, 80.2707], 13); // Chennai example
+
+  // OpenStreetMap tiles (NO API KEY)
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors",
+  }).addTo(map);
+
+  // Example hospital location
+  var hospitalLatLng = L.latLng(13.067439, 80.237617);
+
+  // Marker for hospital
+  L.marker(hospitalLatLng)
+    .addTo(map)
+    .bindPopup("Hospital")
+    .openPopup();
+
+  // Get user location
+  navigator.geolocation.getCurrentPosition(function (position) {
+    var userLatLng = L.latLng(
+      position.coords.latitude,
+      position.coords.longitude
+    );
+
+    L.marker(userLatLng)
+      .addTo(map)
+      .bindPopup("Your Location")
+      .openPopup();
+
+    // Route
+    L.Routing.control({
+      waypoints: [userLatLng, hospitalLatLng],
+      routeWhileDragging: false,
+      show: false
+    }).addTo(map);
+  });
+</script>
+
+</body>
+</html>
